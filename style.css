@@ -1,0 +1,337 @@
+/* Cài đặt cơ bản và màu tối */
+:root {
+    color-scheme: dark;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+body { 
+    background-color: #0e0e0e; /* Nền đen xám y hệt app */
+    color: #e0e0e0; 
+    min-height: 100vh; 
+}
+
+/* Thanh Header */
+header {
+    background-color: #141414; 
+    padding: 15px 40px; 
+    display: flex; 
+    align-items: center;
+    justify-content: space-between; 
+    border-bottom: 1px solid #2a2a2a;
+    position: sticky; 
+    top: 0; 
+    z-index: 100;
+}
+
+.logo { 
+    font-size: 24px; 
+    font-weight: 800; 
+    color: #ffffff; 
+    letter-spacing: 1px; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.logo span { 
+    color: #22c55e; /* Màu xanh lá giống nút Start bên app */
+}
+
+/* Thanh tìm kiếm */
+.search-container { 
+    flex-grow: 1; 
+    max-width: 600px; 
+    margin: 0 40px; 
+    position: relative; 
+}
+
+.search-container input {
+    width: 100%; 
+    padding: 12px 20px; 
+    background-color: #181818; 
+    border: 1px solid #2a2a2a;
+    border-radius: 8px; 
+    color: #e0e0e0; 
+    font-size: 15px; 
+    outline: none; 
+    transition: 0.3s;
+}
+
+.search-container input:focus { 
+    border-color: #3b82f6; 
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); 
+}
+
+.search-icon { 
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: #666; 
+}
+
+/* Tabs phân loại */
+.tabs { 
+    display: flex; 
+    gap: 15px; 
+    padding: 25px 40px 15px; 
+    max-width: 1400px; 
+    margin: 0 auto; 
+}
+
+.tab-btn {
+    background: transparent; 
+    border: none; 
+    color: #888; 
+    font-size: 16px;
+    font-weight: 600; 
+    padding: 8px 16px; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    transition: 0.2s;
+}
+
+.tab-btn:hover { 
+    color: #ccc; 
+    background-color: #1f1f1f; 
+}
+
+.tab-btn.active { 
+    color: #ffffff; 
+    background-color: #222222; 
+    box-shadow: inset 0 0 0 1px #2a2a2a;
+}
+
+/* Lưới hiển thị */
+.grid-container { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 25px; 
+    padding: 10px 40px 40px; 
+    max-width: 1400px; 
+    margin: 0 auto; 
+}
+
+/* Card hiển thị */
+.card { 
+    background-color: #141414; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    border: 1px solid #2a2a2a; 
+    position: relative; 
+}
+
+.card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.6); 
+    border-color: #444; 
+}
+
+.card-img { 
+    width: 100%; 
+    height: 160px; 
+    object-fit: cover; 
+    background-color: #1a1a1a; 
+    border-bottom: 1px solid #2a2a2a; 
+}
+
+.badge { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    padding: 4px 8px; 
+    border-radius: 4px; 
+    font-size: 11px; 
+    font-weight: bold; 
+    text-transform: uppercase; 
+    backdrop-filter: blur(4px); 
+}
+
+.badge.executor { background: rgba(59, 130, 246, 0.9); color: #fff; }
+.badge.script { background: rgba(34, 197, 94, 0.9); color: #fff; }
+
+.card-info { 
+    padding: 15px; 
+}
+
+.card-title { 
+    font-size: 16px; 
+    font-weight: 600; 
+    color: #eee; 
+    margin-bottom: 8px; 
+    line-height: 1.4; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical; 
+    overflow: hidden; 
+}
+
+.card-meta { 
+    font-size: 13px; 
+    color: #777; 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+}
+
+/* MODAL (Popup) */
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background: rgba(0,0,0,0.85); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
+    opacity: 0; 
+    pointer-events: none; 
+    transition: 0.3s; 
+    backdrop-filter: blur(5px); 
+}
+
+.modal-overlay.active { 
+    opacity: 1; 
+    pointer-events: all; 
+}
+
+.modal-content { 
+    background: #141414; 
+    width: 90%; 
+    max-width: 700px; 
+    border-radius: 12px; 
+    border: 1px solid #2a2a2a; 
+    overflow: hidden; 
+    transform: scale(0.9); 
+    transition: 0.3s; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.modal-overlay.active .modal-content { 
+    transform: scale(1); 
+}
+
+.modal-header { 
+    padding: 15px 20px; 
+    border-bottom: 1px solid #2a2a2a; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #181818; 
+}
+
+.modal-header h2 { 
+    font-size: 18px; 
+    color: #fff;
+}
+
+.close-btn { 
+    background: none; 
+    border: none; 
+    color: #888; 
+    font-size: 20px; 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+
+.close-btn:hover { 
+    color: #ef4444; /* Đỏ giống nút Stop */
+}
+
+.modal-body { 
+    padding: 20px; 
+}
+
+.modal-img { 
+    width: 100%; 
+    max-height: 200px; 
+    object-fit: contain; 
+    border-radius: 8px; 
+    margin-bottom: 15px; 
+    background: #0e0e0e; 
+}
+
+.modal-info p { 
+    margin-bottom: 8px; 
+    color: #aaa; 
+    font-size: 14px; 
+}
+
+.modal-info strong { 
+    color: #fff; 
+}
+
+.badge-type { 
+    background: #3b82f6; 
+    padding: 2px 8px; 
+    border-radius: 4px; 
+    font-size: 12px; 
+    color: white; 
+}
+
+.code-container { 
+    margin-top: 20px; 
+    background: #0e0e0e; 
+    border: 1px solid #2a2a2a; 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+
+.code-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 15px; 
+    background: #181818; 
+    border-bottom: 1px solid #2a2a2a; 
+    font-size: 13px; 
+    color: #aaa; 
+}
+
+.copy-btn { 
+    background: #22c55e; /* Nút copy xanh lá */
+    border: none; 
+    color: #000; 
+    padding: 6px 12px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: 0.2s; 
+}
+
+.copy-btn:hover { 
+    background: #16a34a; 
+    color: #fff;
+}
+
+textarea { 
+    width: 100%; 
+    height: 150px; 
+    background: transparent; 
+    border: none; 
+    color: #ccc; 
+    padding: 15px; 
+    font-family: 'Consolas', monospace; 
+    font-size: 14px; 
+    resize: none; 
+    outline: none; 
+    white-space: pre; 
+}
+
+.empty-state { 
+    grid-column: 1/-1; 
+    text-align: center; 
+    padding: 50px; 
+    color: #666; 
+    display: none; 
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LH HUB</title>
+    <!-- Gắn logo lên tab trình duyệt -->
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+    <link rel="stylesheet" href="style.css">
+    <!-- Dùng FontAwesome để lấy icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Ép trình duyệt dùng theme tối -->
+    <meta name="color-scheme" content="dark">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <!-- Hiển thị ảnh logo nếu có, nếu lỗi thì ẩn đi -->
+            <img src="logo.ico" alt="LH" style="height: 28px; width: 28px; border-radius: 6px;" onerror="this.style.display='none'">
+            LH <span>HUB</span>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm script, executor...">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-category="all">Tất cả</button>
+        <button class="tab-btn" data-category="executor">Executors</button>
+        <button class="tab-btn" data-category="script">Scripts</button>
+    </div>
+
+    <div class="grid-container" id="videoGrid">
+        <div class="empty-state" id="emptyState">Không tìm thấy kết quả nào.</div>
+    </div>
+
+    <!-- MODAL (Bảng thông tin hiện ra khi click vào ảnh) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tên Script</h2>
+                <button class="close-btn" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Preview" class="modal-img">
+                <div class="modal-info">
+                    <p><strong>Tác giả:</strong> <span id="modalAuthor"></span></p>
+                    <p><strong>Phân loại:</strong> <span id="modalType" class="badge-type">Executor</span></p>
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <span id="codeFileName">script.txt</span>
+                        <button class="copy-btn" id="copyBtn"><i class="fa-regular fa-copy"></i> Copy Code</button>
+                    </div>
+                    <textarea id="codeContent" readonly placeholder="Đang tải nội dung..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
