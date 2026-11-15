@@ -2,13 +2,12 @@ let allData = [];
 let currentCategory = 'all';
 let searchQuery = '';
 
-// Các elements
 const grid = document.getElementById('videoGrid');
 const emptyState = document.getElementById('emptyState');
 const searchInput = document.getElementById('searchInput');
 const tabBtns = document.querySelectorAll('.tab-btn');
 
-// Elements của Modal
+// Modal Elements
 const modalOverlay = document.getElementById('modalOverlay');
 const closeModalBtn = document.getElementById('closeModal');
 const modalTitle = document.getElementById('modalTitle');
@@ -18,26 +17,24 @@ const modalType = document.getElementById('modalType');
 const codeFileName = document.getElementById('codeFileName');
 const codeContent = document.getElementById('codeContent');
 const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
 
-// 1. Tải dữ liệu từ file data.json
 async function fetchData() {
     try {
+        // Tự động tải file data.json do Github tạo ra
         const response = await fetch('data.json');
         const data = await response.json();
         
-        // Gắn thêm type vào dữ liệu để dễ xử lý
         const executors = data.executors.map(item => ({ ...item, type: 'executor' }));
         const scripts = data.scripts.map(item => ({ ...item, type: 'script' }));
         
         allData = [...executors, ...scripts];
         renderWeb();
     } catch (error) {
-        console.error("Lỗi tải data.json:", error);
-        grid.innerHTML = `<div style="text-align:center; grid-column:1/-1; color:red;">Lỗi: Không thể đọc file data.json. Nếu bạn đang mở file trực tiếp, hãy dùng Local Server hoặc Blink.</div>`;
+        grid.innerHTML = `<div style="text-align:center; grid-column:1/-1; color:red;">Đang chờ Github quét dữ liệu...</div>`;
     }
 }
 
-// 2. Hiển thị ra màn hình
 function renderWeb() {
     const filtered = allData.filter(item => {
         const matchCat = currentCategory === 'all' || item.type === currentCategory;
@@ -45,7 +42,6 @@ function renderWeb() {
         return matchCat && matchSearch;
     });
 
-    // Xóa các card cũ (trừ empty state)
     grid.innerHTML = '';
     grid.appendChild(emptyState);
 
@@ -58,7 +54,6 @@ function renderWeb() {
             const card = document.createElement('div');
             card.className = 'card';
             
-            // Đường dẫn ảnh: ví dụ executor/Delta-Executor/anh.png
             const typeFolder = item.type === 'executor' ? 'executor' : 'script';
             const imagePath = `${typeFolder}/${item.folder}/anh.png`;
             const badgeClass = item.type === 'executor' ? 'executor' : 'script';
@@ -73,14 +68,12 @@ function renderWeb() {
                 </div>
             `;
             
-            // Khi bấm vào card -> Mở Modal
             card.onclick = () => openModal(item);
             grid.appendChild(card);
         });
     }
 }
 
-// 3. Xử lý mở Modal & đọc file Text
 async function openModal(item) {
     modalTitle.textContent = item.title;
     modalAuthor.textContent = item.author;
@@ -89,30 +82,41 @@ async function openModal(item) {
     const typeFolder = item.type === 'executor' ? 'executor' : 'script';
     modalImage.src = `${typeFolder}/${item.folder}/anh.png`;
     
-    // Tên file text tương ứng
-    const fileName = item.type === 'executor' ? 'executor.txt' : 'script.txt';
-    const filePath = `${typeFolder}/${item.folder}/${fileName}`;
-    
-    codeFileName.textContent = fileName;
-    codeContent.value = "Đang tải nội dung...";
-    
     modalOverlay.classList.add('active');
 
-    // Tải file text từ thư mục
-    try {
-        const res = await fetch(filePath);
-        if (res.ok) {
+    // Nếu là executor -> Hiện link tải, ẩn code
+    if (item.type === 'executor') {
+        codeFileName.textContent = "Link tải Executor:";
+        codeContent.style.display = 'none'; // Ẩn textarea
+        copyBtn.style.display = 'none'; // Ẩn nút Copy
+        downloadBtn.style.display = 'block'; // Hiện nút Download
+        
+        try {
+            const res = await fetch(`${typeFolder}/${item.folder}/link.txt`);
+            const link = (await res.text()).trim();
+            downloadBtn.onclick = () => window.open(link, '_blank');
+        } catch (err) {
+            downloadBtn.onclick = () => alert("Chưa có link tải!");
+        }
+    } 
+    // Nếu là script -> Hiện code, ẩn link
+    else {
+        codeFileName.textContent = "script.txt";
+        codeContent.style.display = 'block'; // Hiện textarea
+        copyBtn.style.display = 'block'; // Hiện nút Copy
+        downloadBtn.style.display = 'none'; // Ẩn nút Download
+        codeContent.value = "Đang tải nội dung...";
+        
+        try {
+            const res = await fetch(`${typeFolder}/${item.folder}/script.txt`);
             const text = await res.text();
             codeContent.value = text;
-        } else {
-            codeContent.value = "Không tìm thấy nội dung file " + fileName + " trong thư mục này.";
+        } catch (err) {
+            codeContent.value = "Lỗi tải script.";
         }
-    } catch (err) {
-        codeContent.value = "Lỗi khi đọc file. Hãy chắc chắn bạn đang chạy web qua Local Server (hoặc Blink) chứ không phải mở file trực tiếp.";
     }
 }
 
-// 4. Các nút bấm
 closeModalBtn.onclick = () => modalOverlay.classList.remove('active');
 modalOverlay.onclick = (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); };
 
@@ -130,13 +134,11 @@ tabBtns.forEach(btn => {
     });
 });
 
-// Xử lý copy code
 copyBtn.onclick = () => {
-    if (!codeContent.value || codeContent.value.includes("Đang tải") || codeContent.value.includes("Không tìm thấy")) return;
+    if (!codeContent.value || codeContent.value.includes("Đang tải")) return;
     navigator.clipboard.writeText(codeContent.value);
     copyBtn.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`;
     setTimeout(() => { copyBtn.innerHTML = `<i class="fa-regular fa-copy"></i> Copy Code`; }, 2000);
 };
 
-// Bắt đầu chạy
 fetchData();

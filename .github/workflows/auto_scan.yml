@@ -1,0 +1,44 @@
+name: Auto Scan Folders
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Quét thư mục và tạo data.json
+        run: |
+          python -c "
+          import os, json
+          data = {'executors': [], 'scripts': []}
+          for folder_type in ['executor', 'script']:
+              if os.path.exists(folder_type):
+                  for sub in os.listdir(folder_type):
+                      path = os.path.join(folder_type, sub)
+                      if os.path.isdir(path):
+                          title_file = os.path.join(path, 'tieude.txt')
+                          title = open(title_file, 'r', encoding='utf-8').read().strip() if os.path.exists(title_file) else sub
+                          data[folder_type + 's'].append({'folder': sub, 'title': title, 'author': 'Vest Lộc'})
+          with open('data.json', 'w', encoding='utf-8') as f:
+              json.dump(data, f, ensure_ascii=False, indent=4)
+          "
+
+      - name: Commit và Push data.json
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data.json
+          git commit -m 'Tự động cập nhật data.json' || echo "Không có gì thay đổi"
+          git push
