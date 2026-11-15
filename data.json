@@ -1,4 +1,10 @@
 {
-    "executors": [],
+    "executors": [
+        {
+            "folder": "hehe",
+            "title": "test zui broo",
+            "author": "Vest Lộc"
+        }
+    ],
     "scripts": []
 }
